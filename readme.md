@@ -1,6 +1,6 @@
 <div align="center">
 
-# 方正课表推送 / FangZhengCoursePush
+# 正方课表推送 / ZhengFangCoursePush
 
 </div>
 
