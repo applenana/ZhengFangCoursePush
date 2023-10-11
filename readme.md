@@ -25,3 +25,9 @@
 clone 所有文件后<br>
 需要在<span style="color:blue">``GetPage.py``</span>中更改 `LoginSite`[教务系统登录页面],`CourseSite`[教务系统课表页面],`Account`[教务系统账号],`SecretKey`[教务系统密码]
 <br>需要在<span style="color:blue">``run.py``</span>中更改 `Token`[pushplus 的 token],`Topic`[pushplus 的群组代码],`initialTime`[开学日期]
+
+<hr>
+
+## Run / 运行
+
+###python run.py
