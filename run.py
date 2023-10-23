@@ -43,35 +43,36 @@ while True:
     for course in courseData:
         startLevel = int(course['courseLevel'].split('-')[0])
         startTime = ClassTimeDict[startLevel]
-        reResult = re.compile('周数：(.*)周(.*)').search(course['courseWeek']).groups()
-        courseWeek = reResult[0]
-        courseSingle = reResult[1]
-        if reResult[1] != '':
-            weekJudge = (singleWeek == re.compile('\((.*)\)').search(courseSingle).groups()[0])
-        else:
-            weekJudge = True
-        if '-' not in courseWeek:
-            courseWeek = courseWeek + '-' + courseWeek
-        if int(courseWeek.split('-')[0]) <= week <= int(courseWeek.split('-')[1]) and weekJudge:
-            print(course['courseName'],course['courseTeacher'])
+        for splitResult in course['courseWeek'].split(','):
+            reResult = re.compile('周数：(.*)周(.*)').search(splitResult).groups()
+            courseWeek = reResult[0]
+            courseSingle = reResult[1]
+            if reResult[1] != '':
+                weekJudge = (singleWeek == re.compile('\((.*)\)').search(courseSingle).groups()[0])
+            else:
+                weekJudge = True
+            if '-' not in courseWeek:
+                courseWeek = courseWeek + '-' + courseWeek
+            if int(courseWeek.split('-')[0]) <= week <= int(courseWeek.split('-')[1]) and weekJudge:
+                print(course['courseName'],course['courseTeacher'])
 
-            if startLevel not in sendCheck:sendCheck[startLevel]=False#初始化
+                if startLevel not in sendCheck:sendCheck[startLevel]=False#初始化
 
-            if int((datetime.datetime.strptime(f"{str(datetime.date.today())} {startTime}","%Y-%m-%d %H:%M") - datetime.datetime.today()).seconds/60) <= 10 \
-                and not sendCheck[startLevel]:
-                print('！推送信息！')
-                #推送操作
-                push=requests.get(f'http://www.pushplus.plus/send?token={token}&title=新的上课通知！&content='
-                         +f"课室:{course['courseLocation']}|课程:{course['courseName']}|授课老师:{course['courseTeacher'].replace('教师：','')}"
-                         +'&template=html'
-                         +f'&topic={topic}')
-                push_result=json.loads(push.text)
-                if push_result['code'] == 200:
-                    print(push_result['msg'])
-                else:
-                    print(push_result['msg'])
+                if int((datetime.datetime.strptime(f"{str(datetime.date.today())} {startTime}","%Y-%m-%d %H:%M") - datetime.datetime.today()).seconds/60) <= 10 \
+                    and not sendCheck[startLevel]:
+                    print('！推送信息！')
+                    #推送操作
+                    push=requests.get(f'http://www.pushplus.plus/send?token={token}&title=新的上课通知！&content='
+                            +f"课室:{course['courseLocation']}|课程:{course['courseName']}|授课老师:{course['courseTeacher'].replace('教师：','')}"
+                            +'&template=html'
+                            +f'&topic={topic}')
+                    push_result=json.loads(push.text)
+                    if push_result['code'] == 200:
+                        print(push_result['msg'])
+                    else:
+                        print(push_result['msg'])
 
-                sendCheck[startLevel] = True
+                    sendCheck[startLevel] = True
 
 
 
